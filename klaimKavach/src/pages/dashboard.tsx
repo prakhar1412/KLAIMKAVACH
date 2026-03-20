@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { plansById } from "@/lib/plans";
 import {
   useGetDashboard,
+  getGetDashboardQueryKey,
   useCheckDisruption,
   getCheckDisruptionQueryKey,
 } from "@workspace/api-client-react";
@@ -28,7 +29,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { isAuthenticated, selectedPlan } = useAuth();
-  const { data: dashboard, isLoading } = useGetDashboard();
+  const { data: dashboard, isLoading } = useGetDashboard({
+    query: {
+      queryKey: getGetDashboardQueryKey(),
+      refetchInterval: 5000,
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: true,
+    },
+  });
   const [isDisruptionModalOpen, setIsDisruptionModalOpen] = useState(false);
 
   useEffect(() => {
@@ -109,7 +117,7 @@ export default function Dashboard() {
         </div>
         <span className="text-xs text-muted-foreground flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-          Live sync
+          Live sync • {new Date(dashboard.lastUpdated).toLocaleTimeString()}
         </span>
       </header>
 

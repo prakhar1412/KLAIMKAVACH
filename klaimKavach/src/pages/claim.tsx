@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { plansById } from "@/lib/plans";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubmitClaim } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Clock,
   IndianRupee,
@@ -22,6 +23,7 @@ export default function Claim() {
   const [reason, setReason] = useState("");
   const [, setLocation] = useLocation();
   const { isAuthenticated, selectedPlan } = useAuth();
+  const { toast } = useToast();
 
   const activePlan = selectedPlan ? plansById[selectedPlan] : null;
   const payoutPerHour = activePlan?.claimPayoutPerHour ?? 120;
@@ -44,9 +46,6 @@ export default function Claim() {
 
   if (!isAuthenticated || !selectedPlan || !activePlan) return null;
 
-  const [step, setStep] = useState<
-    "select" | "details" | "submitting" | "success"
-  >("select");
   const {
     mutate: submitClaim,
     isPending,
@@ -56,12 +55,31 @@ export default function Claim() {
   const totalPayout = hours * payoutPerHour;
 
   const handleSubmit = () => {
-    submitClaim({
-      data: {
-        hoursLost: hours,
-        reason: reason || "Heavy Rain / Disruption",
+    submitClaim(
+      {
+        data: {
+          hoursLost: hours,
+          reason: reason || "Heavy Rain / Disruption",
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          toast({
+            title: "Claim submitted",
+            description: "Your claim was submitted successfully.",
+          });
+        },
+        onError: (error: any) => {
+          toast({
+            title: "Claim failed",
+            description:
+              error?.message ||
+              "Could not submit claim. Please try again in a few seconds.",
+            variant: "destructive",
+          });
+        },
+      },
+    );
   };
 
   if (successData?.success) {
@@ -231,18 +249,20 @@ export default function Claim() {
           </div>
 
           <Button
-            className="w-full h-12 text-base font-medium"
+            className="w-full h-11 sm:h-12 text-sm sm:text-base font-medium px-3 sm:px-4"
             onClick={handleSubmit}
             disabled={isPending}
           >
             {isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...
-              </>
+              <span className="inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Processing...</span>
+              </span>
             ) : (
-              <>
-                Submit Claim <ArrowRight className="w-4 h-4 ml-2" />
-              </>
+              <span className="inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                <span>Submit Claim</span>
+                <ArrowRight className="w-4 h-4" />
+              </span>
             )}
           </Button>
         </div>

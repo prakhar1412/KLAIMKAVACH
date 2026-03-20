@@ -13,7 +13,10 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH || "/";
-const useMockApi = process.env.MOCK_API === "true";
+const useMockApi =
+  process.env.MOCK_API !== undefined
+    ? process.env.MOCK_API === "true"
+    : process.env.NODE_ENV !== "production";
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -122,6 +125,32 @@ function calculateMockTrustScore(input: {
   };
 }
 
+function getRealtimeDashboardPayload(userName: string) {
+  const now = Date.now();
+  const cycle = Math.sin(now / 20000);
+  const riskScore = Math.round(38 + cycle * 18);
+
+  let riskLevel = "Low Risk";
+  if (riskScore > 70) {
+    riskLevel = "High Risk";
+  } else if (riskScore >= 30) {
+    riskLevel = "Medium Risk";
+  }
+
+  const totalClaims = 1 + Math.floor((now / 45000) % 5);
+
+  return {
+    userName,
+    riskScore,
+    riskLevel,
+    weeklyPremium: 49,
+    coverageAmount: 25000,
+    activePolicies: 1,
+    totalClaims,
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
 const mockApiPlugin = (): Plugin => {
   let activeUserName = "Gig Worker"; // In-memory state
 
@@ -159,16 +188,7 @@ const mockApiPlugin = (): Plugin => {
 
           if (req.url.includes("/dashboard")) {
             res.end(
-              JSON.stringify({
-                userName: activeUserName,
-                riskScore: 24,
-                riskLevel: "Low Risk",
-                weeklyPremium: 49,
-                coverageAmount: 25000,
-                activePolicies: 1,
-                totalClaims: 0,
-                lastUpdated: new Date().toISOString(),
-              }),
+              JSON.stringify(getRealtimeDashboardPayload(activeUserName)),
             );
             return;
           }
