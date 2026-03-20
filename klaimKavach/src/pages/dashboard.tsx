@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 import { useGetDashboard, useCheckDisruption, getCheckDisruptionQueryKey } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { 
@@ -21,8 +22,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
   const { data: dashboard, isLoading } = useGetDashboard();
   const [isDisruptionModalOpen, setIsDisruptionModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/register");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  if (!isAuthenticated) return null;
 
   const { 
     data: disruptionData, 

@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 import { useGetFraudStatus } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { ShieldCheck, AlertTriangle, ShieldAlert, Info } from "lucide-react";
@@ -7,7 +10,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Fraud() {
+  const [, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/register");
+    }
+  }, [isAuthenticated, setLocation]);
+
   const { data: fraudData, isLoading } = useGetFraudStatus();
+
+  if (!isAuthenticated) return null;
 
   if (isLoading) {
     return (

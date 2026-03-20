@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSubmitClaim } from "@workspace/api-client-react";
 import { Clock, IndianRupee, FileText, CheckCircle, ArrowRight, Loader2 } from "lucide-react";
@@ -10,6 +12,16 @@ import { Textarea } from "@/components/ui/textarea";
 export default function Claim() {
   const [hours, setHours] = useState<number>(4);
   const [reason, setReason] = useState("");
+  const [, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/register");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  const [step, setStep] = useState<"select" | "details" | "submitting" | "success">("select");
   const { mutate: submitClaim, isPending, data: successData } = useSubmitClaim();
   
   const PAYOUT_PER_HOUR = 150;
