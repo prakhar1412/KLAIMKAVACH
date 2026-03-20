@@ -1,11 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, createContext, useContext, useEffect, ReactNode } from "react";
 
-export function useAuth() {
+interface AuthContextType {
+  user: string | null;
+  isAuthenticated: boolean;
+  login: (name: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<string | null>(() => {
-    return localStorage.getItem("klaimkavach_user");
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("klaimkavach_user");
+    }
+    return null;
   });
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return !!localStorage.getItem("klaimkavach_user");
+    if (typeof window !== "undefined") {
+      return !!localStorage.getItem("klaimkavach_user");
+    }
+    return false;
   });
 
   const login = (name: string) => {
@@ -20,5 +35,17 @@ export function useAuth() {
     setIsAuthenticated(false);
   };
 
-  return { user, isAuthenticated, login, logout };
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
