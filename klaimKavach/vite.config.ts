@@ -46,7 +46,7 @@ const mockApiPlugin = (): Plugin => {
               userName: activeUserName,
               riskScore: 24,
               riskLevel: "Low Risk",
-              weeklyPremium: 149,
+              weeklyPremium: 49,
               coverageAmount: 25000,
               activePolicies: 1,
               totalClaims: 0,

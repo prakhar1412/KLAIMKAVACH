@@ -52,7 +52,7 @@ const stats = [
 
 const steps = [
   { num: "01", title: "Sign Up", desc: "Register in 2 minutes with your phone, vehicle, and city." },
-  { num: "02", title: "Get Covered", desc: "Your AI policy activates instantly — ₹249/week." },
+  { num: "02", title: "Get Covered", desc: "Your AI policy activates instantly — ₹69/week." },
   { num: "03", title: "Claim Instantly", desc: "Detect a disruption, file a claim, receive your payout." },
 ];
 

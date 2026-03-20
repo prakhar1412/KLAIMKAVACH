@@ -14,7 +14,7 @@ const fadeUp = (delay = 0) => ({
 const plans = [
   {
     name: "Basic",
-    price: "₹149",
+    price: "₹49",
     period: "/week",
     desc: "Light coverage for part-time gig workers.",
     coverage: "₹25,000",
@@ -29,7 +29,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "₹249",
+    price: "₹69",
     period: "/week",
     desc: "Full protection for full-time gig workers.",
     coverage: "₹50,000",
@@ -46,7 +46,7 @@ const plans = [
   },
   {
     name: "Elite",
-    price: "₹399",
+    price: "₹99",
     period: "/week",
     desc: "Maximum coverage for top earners.",
     coverage: "₹1,00,000",
