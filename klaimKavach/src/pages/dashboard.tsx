@@ -100,7 +100,7 @@ export default function Dashboard() {
               <span className="text-5xl font-bold tracking-tight text-foreground tabular-nums">₹{dashboard.weeklyPremium}</span>
             </div>
             <p className="text-sm text-muted-foreground mt-4 max-w-md">
-              Coverage up to ₹{dashboard.coverageAmount.toLocaleString()} for disruptions, breakdown, or medical.
+              Coverage - (depend on earning) for disruptions, breakdown, or medical.
             </p>
           </div>
         </Card>

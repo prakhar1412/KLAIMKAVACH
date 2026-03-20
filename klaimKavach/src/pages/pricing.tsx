@@ -17,7 +17,7 @@ const plans = [
     price: "₹49",
     period: "/week",
     desc: "Light coverage for part-time gig workers.",
-    coverage: "₹25,000",
+    coverage: "- (depend on earning)",
     highlight: false,
     features: [
       "Weather disruption cover",
@@ -32,7 +32,7 @@ const plans = [
     price: "₹69",
     period: "/week",
     desc: "Full protection for full-time gig workers.",
-    coverage: "₹50,000",
+    coverage: "- (depend on earning)",
     highlight: true,
     badge: "Most Popular",
     features: [
@@ -49,7 +49,7 @@ const plans = [
     price: "₹99",
     period: "/week",
     desc: "Maximum coverage for top earners.",
-    coverage: "₹1,00,000",
+    coverage: "- (depend on earning)",
     highlight: false,
     features: [
       "Everything in Pro",
@@ -139,7 +139,7 @@ export default function Pricing() {
                 </div>
                 <p className="text-xs text-muted-foreground mb-3">{plan.desc}</p>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20">
-                  <span className="text-xs text-emerald-400 font-medium">Coverage up to {plan.coverage}</span>
+                  <span className="text-xs text-emerald-400 font-medium">Coverage {plan.coverage}</span>
                 </div>
               </div>
 
